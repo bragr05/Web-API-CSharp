@@ -14,15 +14,42 @@ namespace Test_Web_API.Controllers
 
         // Note: This endpoint use params here to diference to others get methods
         [HttpGet("{id}")] 
-        public People GetByID(int id)
-        {
-            return Repository.PeopleList.First((p) => p.Id == id);
-        }
-
+        public People GetByID(int id) => Repository.PeopleList.First((p) => p.Id == id);
+        
         [HttpGet("search/{name}")]
         public List<People> GetMatches(string name) =>
             // Use LINQ to find Matches (Uses toUpper for ignore Capital letters)
             Repository.PeopleList.Where((p) => p.Name.ToUpper().Contains(name.ToUpper())).ToList();
+
+        // This is an example of Error handling with Acction Results
+        [HttpGet("acction-result/{id}")]
+        public ActionResult<People> GetByIDActionResult(int id)
+        {
+            var people = Repository.PeopleList.FirstOrDefault((p) => p.Id == id);
+
+            if (people == null)
+            {
+                // Uses codes HTTP to responses with erros
+                return NotFound();
+            }
+            
+            return Ok(people);
+        }
+
+        // Uses of Interfaces IActionResult to responses HTTP
+        [HttpPost]
+        public IActionResult Add(People people)
+        {
+            if (string.IsNullOrEmpty(people.Name))
+            {
+                return BadRequest();
+            }
+
+            Repository.PeopleList.Add(people);
+
+            return NoContent();
+        }
+
     }
 
     public class Repository
