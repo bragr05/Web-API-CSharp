@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Test_Web_API.Services;
 
 namespace Test_Web_API.Controllers
 {
@@ -7,6 +8,14 @@ namespace Test_Web_API.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
+        private IPeopleService _peopleService;
+
+        // Example of application SOLID Principles (D) (peopleService is inject in Program.cs)
+        public PeopleController(IPeopleService peopleService)
+        {
+            _peopleService = peopleService;
+        }
+        
         // Other custom for for access this endpoint
         [HttpGet("all")]
         // Especific return type of endpoint (example List<>)
@@ -40,7 +49,7 @@ namespace Test_Web_API.Controllers
         [HttpPost]
         public IActionResult Add(People people)
         {
-            if (string.IsNullOrEmpty(people.Name))
+            if (!_peopleService.Validate(people))
             {
                 return BadRequest();
             }
