@@ -10,7 +10,19 @@ namespace Test_Web_API.Controllers
         // Other custom for for access this endpoint
         [HttpGet("all")]
         // Especific return type of endpoint (example List<>)
-        public List<People> GetPeoples() => Repository.PeopleList;
+        public List<People> GetAll() => Repository.PeopleList;
+
+        // Note: This endpoint use params here to diference to others get methods
+        [HttpGet("{id}")] 
+        public People GetByID(int id)
+        {
+            return Repository.PeopleList.First((p) => p.Id == id);
+        }
+
+        [HttpGet("search/{name}")]
+        public List<People> GetMatches(string name) =>
+            // Use LINQ to find Matches (Uses toUpper for ignore Capital letters)
+            Repository.PeopleList.Where((p) => p.Name.ToUpper().Contains(name.ToUpper())).ToList();
     }
 
     public class Repository
@@ -32,7 +44,7 @@ namespace Test_Web_API.Controllers
             new People()
             {
                 Id=3,
-                Name = "Yee",
+                Name = "Foo",
                 Birthdate = DateTime.Today,
             }
         };
