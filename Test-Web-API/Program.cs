@@ -23,6 +23,16 @@ builder.Services.AddKeyedSingleton<IRandomService, RandomService>("randomSinglet
 builder.Services.AddKeyedScoped<IRandomService, RandomService>("randomScoped");
 builder.Services.AddKeyedTransient<IRandomService, RandomService>("randomTransient");
 
+// Others injection of others examples
+builder.Services.AddScoped<IPostsService, PostsService>();
+
+// This Factory HTTP is placed under of all inyections
+builder.Services.AddHttpClient<IPostsService, PostsService>((c) => 
+{
+    c.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/posts");
+});
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
