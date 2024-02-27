@@ -29,7 +29,8 @@ builder.Services.AddScoped<IPostsService, PostsService>();
 // This Factory HTTP is placed under of all inyections
 builder.Services.AddHttpClient<IPostsService, PostsService>((c) => 
 {
-    c.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/posts");
+    // The Url is in App Settings JSON File 
+    c.BaseAddress = new Uri(builder.Configuration["BaseUrlPosts"]);
 });
 
 
